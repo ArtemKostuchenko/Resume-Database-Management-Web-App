@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Підтвердження видалення{% endblock %}
+
+{% block layout %}
+    <div class="relative top-1/2 max-w-md mx-auto p-4 bg-white shadow rounded mt-10">
+        <h2 class="text-xl font-bold mb-4">Ви впевнені, що хочете видалити компанію?</h2>
+        <p class="mb-6"><strong>{{ company.name }}</strong></p>
+
+        <div class="flex gap-2">
+            <form method="post" action="{{ path('app_company_delete', {id: company.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ company.id) }}">
+                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Підтвердити</button>
+            </form>
+
+            <a href="{{ path('app_companies') }}" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Скасувати</a>
+        </div>
+    </div>
+{% endblock %}

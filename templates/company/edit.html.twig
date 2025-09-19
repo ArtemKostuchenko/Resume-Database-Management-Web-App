@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редагування компанії "{{ form.name.vars.value }}"{% endblock %}
+
+{% block nav %} {% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <a href="{{ path('app_companies') }}" class="text-gray-600 hover:text-gray-900">Компанії</a>
+    </li>
+
+    <li>
+        {{ include("_chevron.html.twig") }}
+    </li>
+
+    <li>
+        <span class="text-gray-600 hover:text-gray-900">{{ form.name.vars.value }}</span>
+    </li>
+
+    <li>
+        {{ include("_chevron.html.twig") }}
+    </li>
+
+    <li aria-current="page" class="text-gray-900 font-medium">Редагування</li>
+{% endblock %}
+
+{% block body %}
+    <div class="px-2">
+        <h2 class="text-gray-600 text-xl font-bold">Редагування компанії "{{ form.name.vars.value }}"</h2>
+
+        {{ include("company/_form.html.twig", {
+            form: form,
+            submitButtonText: "Зберегти"
+        }) }}
+    </div>
+
+
+{% endblock %}

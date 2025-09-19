@@ -38,7 +38,7 @@ class CompanyController extends AbstractController
             $entityManager->persist($company);
             $entityManager->flush();
 
-            $this->addFlash("success", "Company added successfully");
+            $this->addFlash("success", "Компанію успішно додано");
 
             return $this->redirectToRoute('app_companies');
         }
@@ -46,5 +46,47 @@ class CompanyController extends AbstractController
         return $this->render('company/add.html.twig', [
             "form" => $form->createView()
         ]);
+    }
+
+    #[Route('/company/{id<\d+>}/edit', name: 'app_company_edit')]
+    public function editCompany(Request $request, EntityManagerInterface $entityManager, Company $company): Response
+    {
+        $form = $this->createForm(CompanyType::class, $company);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            $this->addFlash("success", "Компанію успішно оновлено");
+
+            return $this->redirectToRoute('app_companies');
+        }
+
+        return $this->render('company/edit.html.twig', [
+            "form" => $form->createView()
+        ]);
+    }
+
+    #[Route('/company/{id<\d+>}/delete/confirm', name: 'app_company_delete_confirm')]
+    public function confirmDelete(Company $company): Response
+    {
+        return $this->render('company/delete.html.twig', [
+            'company' => $company
+        ]);
+    }
+
+    #[Route('/company/{id<\d+>}/delete', name: 'app_company_delete', methods: ['POST'])]
+    public function deleteCompany(Request $request, EntityManagerInterface $entityManager, Company $company): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$company->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($company);
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Компанію успішно видалено');
+        }
+
+        return $this->redirectToRoute('app_companies');
     }
 }
