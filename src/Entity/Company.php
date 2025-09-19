@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CompanyRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
 class Company
@@ -15,15 +16,23 @@ class Company
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Поле 'Назва компанії' не може бути порожнє")]
+    #[Assert\Length(max: 255, maxMessage: "Максимальна довжина назви компанії 255 символів")]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Поле 'Веб-сайт компанії' не може бути порожнє")]
+    #[Assert\Length(max: 255, maxMessage: "Максимальна довжина веб-сайту компанії 255 символів")]
     private ?string $website = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Поле 'Адреса компанії' не може бути порожнє")]
+    #[Assert\Length(max: 255, maxMessage: "Максимальна довжина адреси компанії 255 символів")]
     private ?string $address = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Поле 'Номер телефону компанії' не може бути порожнє")]
+    #[Assert\Regex('/^\+?[0-9]{1,3}?[-.\s]?(?:\(?\d{1,4}\)?[-.\s]?)+\d{1,4}$/', message: "Введіть правильний номер телефону компанії")]
     private ?string $phone = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
