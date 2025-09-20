@@ -8,6 +8,9 @@
             <h2 class="text-gray-600 text-xl font-bold">Компанії</h2>
             <a href="{{ path("app_company_add") }}" class="inline-block px-4 py-2 text-white bg-cyan-600 rounded-md font-medium">Додати</a>
         </div>
+        {{ include("_fs.html.twig", {
+            placeholder: "Пошук компаній"
+        }) }}
         <div class="mt-6 overflow-x-auto rounded-lg shadow">
             <table class="min-w-full border border-gray-200 divide-y divide-gray-200">
                 <thead class="bg-gray-100">
@@ -48,6 +51,7 @@
                 {% endif %}
                 </tbody>
             </table>
+            {{ include('_pagination.html.twig') }}
         </div>
     </div>
 {% endblock %}

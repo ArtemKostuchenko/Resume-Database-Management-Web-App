@@ -1,0 +1,12 @@
+<form method="get" action="{{ action|default('') }}" class="mt-2 flex items-center justify-between gap-2">
+    <div class="mt-2 flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-sky-600">
+        <input type="text" class="block min-w-0 grow bg-white py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6" name="q" value="{{ q|default('') }}" placeholder="{{ placeholder|default('Пошук') }}">
+    </div>
+    {% if sort|default(null) %}
+    <select onchange="this.form.submit()" name="sort"
+            class="appearance-none h-9 px-3 text-sm/6 rounded-md outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-sky-600">
+        <option value="desc" {{ sort == 'desc' ? 'selected' }}>Нові</option>
+        <option value="asc" {{ sort == 'asc' ? 'selected' }}>Старі</option>
+    </select>
+    {% endif %}
+</form>

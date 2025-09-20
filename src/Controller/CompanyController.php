@@ -14,12 +14,33 @@ use Symfony\Component\Routing\Annotation\Route;
 class CompanyController extends AbstractController
 {
     #[Route('/companies', name: 'app_companies')]
-    public function index(CompanyRepository $companyRepository): Response
+    public function index(Request $request, CompanyRepository $companyRepository): Response
     {
-        $companies = $companyRepository->findAll();
+        $q = $request->query->get('q', '');
+        $sort = $request->query->get('sort', 'desc');
+        $limit = $request->query->getInt('limit', 10);
+        $page = max($request->query->getInt('page', 1), 1);
+        $offset = ($page - 1) * $limit;
+
+        $orderBy = [];
+
+        if ($sort === 'desc') {
+            $orderBy = ['created_at' => 'DESC'];
+        } elseif ($sort === 'old') {
+            $orderBy = ['created_at' => 'ASC'];
+        }
+
+        $companies = $companyRepository->searchCompanies($q, $orderBy, $limit, ($page - 1) * $limit);
+        $total = $companyRepository->countSearchCompanies($q);
 
         return $this->render('company/index.html.twig', [
             'companies' => $companies,
+            'q' => $q,
+            'sort' => $sort,
+            'limit' => $limit,
+            'page' => $page,
+            'total' => $total,
+            'pages' => ceil($total / $limit),
         ]);
     }
 

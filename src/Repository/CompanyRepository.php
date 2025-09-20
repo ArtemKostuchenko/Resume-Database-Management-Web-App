@@ -21,6 +21,32 @@ class CompanyRepository extends ServiceEntityRepository
         parent::__construct($registry, Company::class);
     }
 
+    public function searchCompanies(string $q, array $orderBy, int $limit, int $offset): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        if ($q) {
+            $qb->andWhere('c.name LIKE :q OR c.address LIKE :q OR c.phone LIKE :q')->setParameter('q', '%' . $q . '%');
+        }
+
+        foreach ($orderBy as $field => $order) {
+            $qb->orderBy('c.' . $field, $order);
+        }
+
+        return  $qb->setFirstResult($offset)->setMaxResults($limit)->getQuery()->getResult();
+    }
+
+    public function countSearchCompanies(string $q): int
+    {
+        $qb = $this->createQueryBuilder('c')->select('COUNT(c.id)');
+
+        if($q) {
+            $qb->andWhere('c.name LIKE :q OR c.address LIKE :q OR c.phone LIKE :q')->setParameter('q', '%' . $q . '%');
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
 //    /**
 //     * @return Company[] Returns an array of Company objects
 //     */
