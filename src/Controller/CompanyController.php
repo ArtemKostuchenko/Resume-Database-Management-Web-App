@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Form\CompanyType;
 use App\Repository\CompanyRepository;
+use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,33 +15,27 @@ use Symfony\Component\Routing\Annotation\Route;
 class CompanyController extends AbstractController
 {
     #[Route('/companies', name: 'app_companies')]
-    public function index(Request $request, CompanyRepository $companyRepository): Response
+    public function index(Request $request, CompanyRepository $companyRepository, PaginationService $paginationService): Response
     {
-        $q = $request->query->get('q', '');
-        $sort = $request->query->get('sort', 'desc');
-        $limit = $request->query->getInt('limit', 10);
-        $page = max($request->query->getInt('page', 1), 1);
-        $offset = ($page - 1) * $limit;
+        $params = $paginationService->getPaginationParams($request);
 
-        $orderBy = [];
+        $companies = $companyRepository->searchCompanies(
+            $params['q'],
+            $params['orderBy'],
+            $params['limit'],
+            $params['offset']
+        );
 
-        if ($sort === 'desc') {
-            $orderBy = ['created_at' => 'DESC'];
-        } elseif ($sort === 'old') {
-            $orderBy = ['created_at' => 'ASC'];
-        }
-
-        $companies = $companyRepository->searchCompanies($q, $orderBy, $limit, ($page - 1) * $limit);
-        $total = $companyRepository->countSearchCompanies($q);
+        $total = $companyRepository->countSearchCompanies($params['q']);
 
         return $this->render('company/index.html.twig', [
             'companies' => $companies,
-            'q' => $q,
-            'sort' => $sort,
-            'limit' => $limit,
-            'page' => $page,
+            'q' =>  $params['q'],
+            'sort' => $params['sort'],
+            'limit' => $params['limit'],
+            'page' => $params['page'],
             'total' => $total,
-            'pages' => ceil($total / $limit),
+            'pages' => ceil($total / $params['limit']),
         ]);
     }
 
