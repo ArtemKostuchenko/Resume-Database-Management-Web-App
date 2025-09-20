@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Резюме{% endblock %}
+
+{% block body %}
+    <div class="px-2">
+        <div class="flex items-center justify-between">
+            <h2 class="text-gray-600 text-xl font-bold">Резюме</h2>
+            <a href="{{ path("app_resume_add") }}" class="inline-block px-4 py-2 text-white bg-cyan-600 rounded-md font-medium">Додати</a>
+        </div>
+        {{ include("_fs.html.twig", {
+            placeholder: "Пошук резюме"
+        }) }}
+        <div class="mt-6 overflow-x-auto rounded-lg shadow">
+            <table class="min-w-full border border-gray-200 divide-y divide-gray-200">
+                <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Назва посади</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Контент резюме </th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Дата створення</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Дата зміни</th>
+                    <th class="px-4 py-2 text-right text-sm font-medium text-gray-700">Дії</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                {% if resumes|length > 0 %}
+                    {% for resume in resumes %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2 text-sm text-gray-800 font-medium">
+                                <a href="#">{{ resume.getPositionTitle() }}</a>
+                            </td>
+                            <td class="px-4 py-2 text-sm text-white">{{ include("resume/_type.html.twig", {resume}) }}</td>
+                            <td class="px-4 py-2 text-sm text-gray-600">{{ resume.getCreatedAt()|date("d.m.Y, H:i", "Europe/Kyiv") }}</td>
+                            <td class="px-4 py-2 text-sm text-gray-600">{{ resume.getUpdatedAt()|date("d.m.Y, H:i", "Europe/Kyiv") }}</td>
+                            <td class="px-4 py-2 text-sm gap-2 flex items-center justify-end text-gray-600">
+                                {% if resume.getFilePath() %}
+                                <a href="{{ path('app_resume_download', { id: resume.id }) }}" class="block p-2 border rounded-md border-gray-300 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M19 15V21M19 21L17 19M19 21L21 19M13 3H8.2C7.0799 3 6.51984 3 6.09202 3.21799C5.71569 3.40973 5.40973 3.71569 5.21799 4.09202C5 4.51984 5 5.0799 5 6.2V17.8C5 18.9201 5 19.4802 5.21799 19.908C5.40973 20.2843 5.71569 20.5903 6.09202 20.782C6.51984 21 7.0799 21 8.2 21H14M13 3L19 9M13 3V7.4C13 7.96005 13 8.24008 13.109 8.45399C13.2049 8.64215 13.3578 8.79513 13.546 8.89101C13.7599 9 14.0399 9 14.6 9H19M19 9V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                </a>
+                                {% endif %}
+                                <a href="{{ path("app_resume_edit", { id: resume.id }) }}" class="block p-2 border rounded-md border-gray-300 hover:bg-gray-100 hover:text-lime-600 transition-colors">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21.2799 6.40005L11.7399 15.94C10.7899 16.89 7.96987 17.33 7.33987 16.7C6.70987 16.07 7.13987 13.25 8.08987 12.3L17.6399 2.75002C17.8754 2.49308 18.1605 2.28654 18.4781 2.14284C18.7956 1.99914 19.139 1.92124 19.4875 1.9139C19.8359 1.90657 20.1823 1.96991 20.5056 2.10012C20.8289 2.23033 21.1225 2.42473 21.3686 2.67153C21.6147 2.91833 21.8083 3.21243 21.9376 3.53609C22.0669 3.85976 22.1294 4.20626 22.1211 4.55471C22.1128 4.90316 22.0339 5.24635 21.8894 5.5635C21.7448 5.88065 21.5375 6.16524 21.2799 6.40005V6.40005Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M11 4H6C4.93913 4 3.92178 4.42142 3.17163 5.17157C2.42149 5.92172 2 6.93913 2 8V18C2 19.0609 2.42149 20.0783 3.17163 20.8284C3.92178 21.5786 4.93913 22 6 22H17C19.21 22 20 20.2 20 18V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                </a>
+                                <a href="{{ path("app_resume_delete_confirm", { id: resume.id }) }}" class="block p-2 border rounded-md border-gray-300 hover:bg-gray-100 hover:text-rose-600 transition-colors">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 7H12H18V18C18 19.6569 16.6569 21 15 21H9C7.34315 21 6 19.6569 6 18V7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="px-4 py-6 text-center text-gray-500 italic">
+                            Немає резюме для відображення
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+            {{ include('_pagination.html.twig', { router_path: "app_resume" }) }}
+        </div>
+    </div>
+{% endblock %}

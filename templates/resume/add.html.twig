@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Додавання резюме{% endblock %}
+
+{% block nav %} {% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <a href="{{ path('app_resumes') }}" class="text-gray-600 hover:text-gray-900">Резюме</a>
+    </li>
+
+    <li>
+        {{ include("_chevron.html.twig") }}
+    </li>
+
+    <li aria-current="page" class="text-gray-900 font-medium">Додавання</li>
+{% endblock %}
+
+{% block body %}
+    <script src="https://cdn.tiny.cloud/1/4h1l0pc75a1emenbzx8h3ybr330y1uuhkg46vzpwbc8chh8d/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea#resume_content',
+            plugins: 'lists link paste',
+            toolbar: 'undo redo | bold italic underline | bullist numlist | link',
+            width: '100%',
+            menubar: false
+        });
+    </script>
+    <div class="px-2">
+        <h2 class="text-gray-600 text-xl font-bold">Додавання резюме</h2>
+        {{ include("resume/_form.html.twig", {
+            form: form,
+            submitButtonText: "Додати"
+        }) }}
+    </div>
+{% endblock %}
