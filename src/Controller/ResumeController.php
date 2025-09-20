@@ -41,7 +41,15 @@ class ResumeController extends AbstractController
         ]);
     }
 
-    #[Route('/resume/add', name: 'app_resume_add')]
+
+    #[Route('/resume/{id}', name: 'app_resume')]
+    public function show(Resume $resume): Response {
+        return $this->render('resume/show.html.twig', [
+            'resume' => $resume,
+        ]);
+    }
+
+    #[Route('/resume/add', name: 'app_resume_add', priority: 2)]
     public function addResume(Request $request, UploadService $uploadService, EntityManagerInterface $entityManager): Response
     {
         $resume = new Resume();
@@ -70,6 +78,14 @@ class ResumeController extends AbstractController
                 }
             }
 
+            if(!$resume->getFilePath() && !$resume->getContent()){
+                $this->addFlash("error", "Напишіть текст резюме або додайте файл");
+
+                return $this->render('resume/add.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+
             $entityManager->persist($resume);
             $entityManager->flush();
 
@@ -83,6 +99,7 @@ class ResumeController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/resume/{id<\d+>}/edit', name: 'app_resume_edit')]
     public function editResume(Request $request, Resume $resume, UploadService $uploadService, EntityManagerInterface $entityManager): Response
@@ -111,6 +128,14 @@ class ResumeController extends AbstractController
                     ]);
                 }
 
+            }
+
+            if(!$resume->getFilePath() && !$resume->getContent()){
+                $this->addFlash("error", "Напишіть текст резюме або додайте файл");
+
+                return $this->render('resume/add.html.twig', [
+                    'form' => $form->createView(),
+                ]);
             }
 
             $entityManager->flush();
