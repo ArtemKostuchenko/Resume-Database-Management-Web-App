@@ -33,18 +33,18 @@ class ResumeRepository extends ServiceEntityRepository
             $qb->orderBy('r.' . $field, $order);
         }
 
-        return  $qb->setFirstResult($offset)->setMaxResults($limit)->getQuery()->getResult();
+        return $qb->setFirstResult($offset)->setMaxResults($limit)->getQuery()->getResult();
     }
 
     public function countResumes(string $q): int
     {
         $qb = $this->createQueryBuilder('r')->select('COUNT(r.id)');
 
-        if($q) {
+        if ($q) {
             $qb->andWhere('r.position_title LIKE :q')->setParameter('q', '%' . $q . '%');
         }
 
-        return (int) $qb->getQuery()->getSingleScalarResult();
+        return (int)$qb->getQuery()->getSingleScalarResult();
     }
 
 //    /**

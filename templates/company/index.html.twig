@@ -28,7 +28,11 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-4 py-2 text-sm text-gray-800 font-medium">{{ company.name }}</td>
                         <td class="px-4 py-2 text-sm text-blue-600 underline">
-                            <a href="{{ company.website }}" target="_blank">{{ company.website }}</a>
+                            {% set url = company.website %}
+                            {% if url and not (url starts with 'http://') and not (url starts with 'https://') %}
+                                {% set url = 'https://' ~ url %}
+                            {% endif %}
+                            <a href="{{ url }}" target="_blank">{{ company.website }}</a>
                         </td>
                         <td class="px-4 py-2 text-sm text-gray-600">{{ company.address }}</td>
                         <td class="px-4 py-2 text-sm text-gray-600">{{ company.phone }}</td>

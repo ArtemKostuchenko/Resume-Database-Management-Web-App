@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Заявки{% endblock %}
+
+{% block body %}
+    <div class="px-2">
+        <div class="flex items-center justify-between">
+            <h2 class="text-gray-600 text-xl font-bold">Заявки</h2>
+        </div>
+        {{ include("_fs.html.twig", {
+            placeholder: "Пошук резюме, компаній"
+        }) }}
+        <div class="mt-6 overflow-x-auto rounded-lg shadow">
+            <table class="min-w-full border border-gray-200 divide-y divide-gray-200">
+                <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Назва резюме</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Компанія</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Реакція</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Дата реакції</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Дата відправки</th>
+                    <th class="px-4 py-2 text-right text-sm font-medium text-gray-700">Дії</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                {% if applications|length > 0 %}
+                    {% for app in applications %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2 text-sm text-gray-800 font-medium">
+                                <a href="{{ path('app_application_view', {id: app.id}) }}">{{ app.resume.positionTitle }}</a>
+                            </td>
+                            <td class="px-4 py-2 text-sm text-white">
+                                <span class="py-1 px-3 rounded-full bg-cyan-600">{{ app.company.name }}</span>
+                            </td>
+                            <td class="px-4 py-2 text-sm text-gray-600">{{ include('_reaction.html.twig', { reaction: app.reaction }) }}</td>
+                            <td class="px-4 py-2 text-sm text-gray-600">{{ app.getReactionAt()? app.getReactionAt()|date("d.m.Y, H:i", "Europe/Kyiv") : "Відсутня" }}</td>
+                            <td class="px-4 py-2 text-sm text-gray-600">{{ app.getSentAt()|date("d.m.Y, H:i", "Europe/Kyiv") }}</td>
+                            <td class="px-4 py-2 text-sm gap-2 flex items-center justify-end text-gray-600">
+                                <a href="{{ path('app_application_view', {id: app.id}) }}"
+                                   class="block p-2 border rounded-md border-gray-300 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                           stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <path d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                                                  stroke="currentColor" stroke-width="1.5"></path>
+                                            <path d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                                                  stroke="currentColor" stroke-width="1.5"></path>
+                                        </g>
+                                    </svg>
+                                </a>
+                                {% if app.reaction is null %}
+                                    <form action="{{ path('app_application_accept', {id: app.id}) }}"
+                                          method="POST">
+                                        <button type="submit"
+                                                class="cursor-pointer block p-2 border rounded-md border-gray-300 hover:bg-gray-100 hover:text-lime-600 transition-colors">
+                                            <svg class="w-4 h-4" fill="currentColor" version="1.1" id="Layer_1"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                 viewBox="0 0 260 244" enable-background="new 0 0 260 244"
+                                                 xml:space="preserve"><g
+                                                        id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                   stroke-linejoin="round"></g>
+                                                <g id="SVGRepo_iconCarrier">
+                                                    <path d="M258,118v96c0,14.333-13.667,28-28,28h-84c-17.439,0-31.571-2.152-48-8c-5.073-1.806-20-8-20-8V114l66.036-77.567L150,2h12 c13.294,0,22.657,10.607,22.657,23.902v7.477c0,17.065-1.028,34.115-3.078,51.057L180.906,90H230C244.333,90,258,103.667,258,118z M2,238h60V102H2V238z"></path>
+                                                </g></svg>
+                                        </button>
+                                    </form>
+                                    <form action="{{ path('app_application_reject', {id: app.id}) }}"
+                                          method="POST">
+                                        <button type="submit"
+                                                class="cursor-pointer block p-2 border rounded-md border-gray-300 hover:bg-gray-100 hover:text-rose-600 transition-colors">
+                                            <svg class="w-4 h-4" fill="currentColor" version="1.1" id="Layer_1"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                 viewBox="0 0 260 244" enable-background="new 0 0 260 244"
+                                                 xml:space="preserve"
+                                                 transform="matrix(1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier"
+                                                                                          stroke-width="0"></g>
+                                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                   stroke-linejoin="round"></g>
+                                                <g id="SVGRepo_iconCarrier">
+                                                    <path d="M258,118v96c0,14.333-13.667,28-28,28h-84c-17.439,0-31.571-2.152-48-8c-5.073-1.806-20-8-20-8V114l66.036-77.567L150,2h12 c13.294,0,22.657,10.607,22.657,23.902v7.477c0,17.065-1.028,34.115-3.078,51.057L180.906,90H230C244.333,90,258,103.667,258,118z M2,238h60V102H2V238z"></path>
+                                                </g></svg>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="px-4 py-6 text-center text-gray-500 italic">
+                            Немає резюме для відображення
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+            {{ include('_pagination.html.twig', { router_path: "app_resume" }) }}
+        </div>
+    </div>
+{% endblock %}

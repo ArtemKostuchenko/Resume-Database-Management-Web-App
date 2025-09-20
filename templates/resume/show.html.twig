@@ -22,37 +22,101 @@
             {{ resume.positionTitle }}
         </h1>
 
-        {% if resume.content %}
-            <div class="prose max-w-none text-gray-700 mb-8">
-                {{ resume.content|raw }}
+        <div class="flex flex-col gap-4 lg:flex-row">
+            <div class="w-full">
+                {% if resume.content %}
+                    <div class="text-gray-700 mb-8">
+                        {{ resume.content|raw }}
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 italic mb-8">
+                        Текст резюме відсутній
+                    </p>
+                {% endif %}
+                {% if resume.filePath %}
+                    <a href="{{ path('app_resume_download', { id: resume.id }) }}"
+                       class="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-md
+                          text-white bg-lime-600">
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                               stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M19 15V21M19 21L17 19M19 21L21 19M13 3H8.2C7.0799 3 6.51984 3 6.09202 3.21799C5.71569 3.40973 5.40973 3.71569 5.21799 4.09202C5 4.51984 5 5.0799 5 6.2V17.8C5 18.9201 5 19.4802 5.21799 19.908C5.40973 20.2843 5.71569 20.5903 6.09202 20.782C6.51984 21 7.0799 21 8.2 21H14M13 3L19 9M13 3V7.4C13 7.96005 13 8.24008 13.109 8.45399C13.2049 8.64215 13.3578 8.79513 13.546 8.89101C13.7599 9 14.0399 9 14.6 9H19M19 9V11"
+                                      stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                      stroke-linejoin="round"></path>
+                            </g>
+                        </svg>
+                        Завантажити резюме
+                    </a>
+                {% else %}
+                    <p class="text-gray-500 italic">
+                        Файл резюме не прикріплений
+                    </p>
+                {% endif %}
             </div>
-        {% else %}
-            <p class="text-gray-500 italic mb-8">
-                Текст резюме відсутній
-            </p>
-        {% endif %}
+            <div class="w-full lg:max-w-lg">
+                <div class="p-4 rounded-md shadow-md border border-gray-200">
+                    <div class="text-gray-600 text-xl font-bold">Надсилання резюме</div>
+                    {{ form_start(form, { "attr": {"novalidate": "novalidate"}}) }}
+                    <div class="mt-10 grid grid-cols-1 gap-y-4">
+                        <div>
+                            {{ form_label(form.company, "Оберіть компанію", {"label_attr": {"class": "block text-sm/6 font-medium text-gray-900"}}) }}
+                            <div class="mt-2">
+                                {{ form_widget(form.company, {"attr": {"class": "appearance-none w-full h-9 px-3 text-sm/6 rounded-md outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-sky-600"}}) }}
+                            </div>
+                            {{ form_errors(form.company) }}
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button type="submit"
+                                class="w-full block py-2 px-4 text-md bg-purple-500 text-white shadow-md rounded md">
+                            Надіслати резюме
+                        </button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
 
-        {% if resume.filePath %}
-            <a href="{{ asset('uploads/resumes/' ~ resume.filePath) }}"
-               class="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-md
-                      text-white bg-lime-600">
-                <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                       stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <path d="M19 15V21M19 21L17 19M19 21L21 19M13 3H8.2C7.0799 3 6.51984 3 6.09202 3.21799C5.71569 3.40973 5.40973 3.71569 5.21799 4.09202C5 4.51984 5 5.0799 5 6.2V17.8C5 18.9201 5 19.4802 5.21799 19.908C5.40973 20.2843 5.71569 20.5903 6.09202 20.782C6.51984 21 7.0799 21 8.2 21H14M13 3L19 9M13 3V7.4C13 7.96005 13 8.24008 13.109 8.45399C13.2049 8.64215 13.3578 8.79513 13.546 8.89101C13.7599 9 14.0399 9 14.6 9H19M19 9V11"
-                              stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                              stroke-linejoin="round"></path>
-                    </g>
-                </svg>
-                Завантажити резюме
-            </a>
-        {% else %}
-            <p class="text-gray-500 italic">
-                Файл резюме не прикріплений
-            </p>
-        {% endif %}
+        <div class="mt-8">
+            <h2 class="text-2xl font-semibold mb-4">Історія відправлень цього резюме</h2>
+            <div class="mt-6 overflow-x-auto rounded-lg shadow">
+                <table class="min-w-full border border-gray-200 divide-y divide-gray-200">
+                    <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Компанія</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Дата відправки</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Реакція</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Дата реакції</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                    {% if applications|length > 0 %}
+                        {% for app in applications %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-2 text-sm text-gray-600">{{ app.company.name }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-600">{{ app.sentAt ? app.sentAt|date("d.m.Y, H:i", "Europe/Kyiv") : '' }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-600">
+                                    {{ include('_reaction.html.twig', { reaction: app.reaction }) }}
+                                </td>
+                                <td class="px-4 py-2 text-sm text-gray-600">{{ app.getReactionAt() ? app.getReactionAt()|date('H:i, d.m.Y') : 'Відсутня' }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="px-4 py-6 text-center text-gray-500 italic">
+                                Відправлень ще не було
+                            </td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+
+
 {% endblock %}

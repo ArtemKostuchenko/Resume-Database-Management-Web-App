@@ -1,0 +1,7 @@
+{% if reaction == 'approved' %}
+    <span class="text-green-600 font-bold">Прийнято</span>
+{% elseif reaction == 'rejected' %}
+    <span class="text-red-600 font-bold">Відхилено</span>
+{% else %}
+    <span class="text-amber-500">Очікується</span>
+{% endif %}

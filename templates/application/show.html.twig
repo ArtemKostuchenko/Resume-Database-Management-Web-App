@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Заявка на позицію {{ application.resume.positionTitle }} ({{ application.company.name }}){% endblock %}
+
+{% block nav %} {% endblock %}
+
+{% block breadcrumb %}
+    <li>
+        <a href="{{ path('app_applications') }}" class="text-gray-600 hover:text-gray-900">Заявки</a>
+    </li>
+
+    <li>
+        {{ include("_chevron.html.twig") }}
+    </li>
+
+    <li aria-current="page" class="text-gray-900 font-medium">Заявка на позицію {{ application.resume.positionTitle }}
+        ({{ application.company.name }})
+    </li>
+{% endblock %}
+
+{% block body %}
+    <div class="p-4">
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Заявка на
+            позицію {{ application.resume.positionTitle }}</h1>
+        <div class="flex flex-col gap-4 lg:flex-row">
+            <div class="w-full">
+                <div class="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    {% if resume.content %}
+                        <div class="text-gray-700 mb-8">
+                            {{ resume.content|raw }}
+                        </div>
+                    {% else %}
+                        <p class="text-gray-500 italic mb-8">
+                            Текст резюме відсутній
+                        </p>
+                    {% endif %}
+                    {% if resume.filePath %}
+                        <a href="{{ path('app_resume_download', { id: resume.id }) }}"
+                           class="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-md
+                          text-white bg-lime-600">
+                            <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                   stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path d="M19 15V21M19 21L17 19M19 21L21 19M13 3H8.2C7.0799 3 6.51984 3 6.09202 3.21799C5.71569 3.40973 5.40973 3.71569 5.21799 4.09202C5 4.51984 5 5.0799 5 6.2V17.8C5 18.9201 5 19.4802 5.21799 19.908C5.40973 20.2843 5.71569 20.5903 6.09202 20.782C6.51984 21 7.0799 21 8.2 21H14M13 3L19 9M13 3V7.4C13 7.96005 13 8.24008 13.109 8.45399C13.2049 8.64215 13.3578 8.79513 13.546 8.89101C13.7599 9 14.0399 9 14.6 9H19M19 9V11"
+                                          stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                          stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                            Завантажити резюме
+                        </a>
+                    {% else %}
+                        <p class="text-gray-500 italic">
+                            Файл резюме не прикріплений
+                        </p>
+                    {% endif %}
+                </div>
+
+                <div class="p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Компанія</h3>
+                    <ul class="text-gray-600 space-y-1">
+                        <li><span class="font-medium">Назва:</span> {{ company.name }}</li>
+                        {% if application.company.website %}
+                            <li><span class="font-medium">Сайт:</span>
+                                {% set url = company.website %}
+                                {% if url and not (url starts with 'http://') and not (url starts with 'https://') %}
+                                    {% set url = 'https://' ~ url %}
+                                {% endif %}
+
+                                <a href="{{ url }}" class="text-blue-600 underline"
+                                   target="_blank">{{ company.website }}</a>
+                            </li>
+                        {% endif %}
+                        {% if application.company.address %}
+                            <li><span class="font-medium">Адреса:</span> {{ company.address }}</li>
+                        {% endif %}
+                        {% if application.company.phone %}
+                            <li><span class="font-medium">Телефон:</span> {{ company.phone }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="w-full space-y-2 p-2 border border-gray-200 rounded-lg bg-gray-50 lg:max-w-md">
+                <div class="space-y-2">
+                    <div class="text-gray-600">Статус:</div>
+                    {{ include('_reaction.html.twig', { reaction: application.reaction }) }}
+                </div>
+                {% if application.reaction is null %}
+                <form action="{{ path('app_application_accept', {id: application.id}) }}" method="POST">
+                    <button type="submit"
+                            class="cursor-pointer w-full flex items-center px-5 py-2.5 text-sm font-medium rounded-md
+                          text-white bg-lime-700">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" version="1.1" id="Layer_1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink"
+                             viewBox="0 0 260 244" enable-background="new 0 0 260 244" xml:space="preserve"><g
+                                    id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                               stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M258,118v96c0,14.333-13.667,28-28,28h-84c-17.439,0-31.571-2.152-48-8c-5.073-1.806-20-8-20-8V114l66.036-77.567L150,2h12 c13.294,0,22.657,10.607,22.657,23.902v7.477c0,17.065-1.028,34.115-3.078,51.057L180.906,90H230C244.333,90,258,103.667,258,118z M2,238h60V102H2V238z"></path>
+                            </g></svg>
+                        Погодити
+                    </button>
+                </form>
+                <form action="{{ path('app_application_reject', {id: application.id}) }}" method="POST">
+                    <button type="submit"
+                            class="cursor-pointer w-full flex items-center px-5 py-2.5 text-sm font-medium rounded-md
+                          text-white bg-red-700">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" version="1.1" id="Layer_1"
+                             xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink"
+                             viewBox="0 0 260 244" enable-background="new 0 0 260 244" xml:space="preserve"
+                             transform="matrix(1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier"
+                                                                      stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                               stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M258,118v96c0,14.333-13.667,28-28,28h-84c-17.439,0-31.571-2.152-48-8c-5.073-1.806-20-8-20-8V114l66.036-77.567L150,2h12 c13.294,0,22.657,10.607,22.657,23.902v7.477c0,17.065-1.028,34.115-3.078,51.057L180.906,90H230C244.333,90,258,103.667,258,118z M2,238h60V102H2V238z"></path>
+                            </g></svg>
+                        Відхилити
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

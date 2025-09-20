@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PaginationService
 {
-    public function getPaginationParams(Request $request, array $defaultOrder = ['created_at' => 'DESC']): array
+    public function getPaginationParams(Request $request, array $defaultOrder = ['created_at' => 'DESC'], string $orderField = "created_at"): array
     {
         $q = $request->query->get('q', '');
         $sort = $request->query->get('sort', 'desc');
@@ -17,9 +17,9 @@ class PaginationService
         $orderBy = $defaultOrder;
 
         if ($sort === 'desc') {
-            $orderBy = ['created_at' => 'DESC'];
+            $orderBy = [$orderField => 'DESC'];
         } elseif ($sort === 'asc') {
-            $orderBy = ['created_at' => 'ASC'];
+            $orderBy = [$orderField => 'ASC'];
         }
 
         return compact('q', 'sort', 'limit', 'page', 'offset', 'orderBy');
