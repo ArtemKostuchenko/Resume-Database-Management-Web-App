@@ -7,8 +7,10 @@
 - Doctrine ORM, MySQL 8.4
 # Запуск
 1. `composer install`
-2. `php bin/console (symfony console) doctrine:database:create`
-3. `php bin/console (symfony console) doctrine:migrations:migrate`
-4. `symfony server:start`
+2. `npm install`
+3. `npm dev`
+4. `php bin/console (symfony console) doctrine:database:create`
+5. `php bin/console (symfony console) doctrine:migrations:migrate`
+6. `symfony server:start`
 # Додатково
 - Шлях завантажених резюме `public/uploads/resumes`

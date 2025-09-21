@@ -54,6 +54,19 @@ class ApplicationRepository extends ServiceEntityRepository
         return (int)$qb->getQuery()->getSingleScalarResult();
     }
 
+    public function findTopResumesByReaction(string $reaction = "approved"): array
+    {
+        return $this->createQueryBuilder('a')
+            ->select('r.id, r.position_title, COUNT(a.id) as reactions')
+            ->innerJoin('a.resume', 'r')
+            ->where('a.reaction = :reaction')
+            ->setParameter('reaction', $reaction)
+            ->groupBy('r.id, r.position_title')
+            ->orderBy('reactions', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Application[] Returns an array of Application objects
 //     */

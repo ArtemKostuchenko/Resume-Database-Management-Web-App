@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block body %}
+    <div class="px-2">
+        <div class="flex items-center justify-between">
+            <h2 class="text-gray-600 text-xl font-bold">Статистика</h2>
+        </div>
+        <div class="mt-4 grid grid-cols-1 gap-8">
+            <div>
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">Позитивні резюме</h2>
+                {% if topChart.data.labels|length > 0 %}
+                    {{ render_chart(topChart) }}
+                {% else %}
+                    <p class="text-gray-500">Немає даних для відображення</p>
+                {% endif %}
+            </div>
+            <div>
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">Негативні резюме</h2>
+                {% if worstChart.data.labels|length > 0 %}
+                    {{ render_chart(worstChart)}}
+                {% else %}
+                    <p class="text-gray-500">Немає даних для відображення</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
