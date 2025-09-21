@@ -72,6 +72,7 @@ class CompanyController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $company->setUpdatedAt(new \DateTime());
             $entityManager->flush();
 
             $this->addFlash("success", "Компанію успішно оновлено");
