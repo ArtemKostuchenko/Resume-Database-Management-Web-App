@@ -151,7 +151,6 @@ class ResumeController extends AbstractController
                         'form' => $form->createView(),
                     ]);
                 }
-
             }
 
             if (!$resume->getFilePath() && !$resume->getContent()) {

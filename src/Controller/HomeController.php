@@ -14,7 +14,7 @@ class HomeController extends AbstractController
     public function index(Request $request, ApplicationRepository $applicationRepository): Response
     {
         $page = $request->query->getInt('page', 1);
-        $limit= $request->query->getInt('limit', 10);
+        $limit = $request->query->getInt('limit', 10);
         $offset = ($page - 1) * $limit;
 
         $applications = $applicationRepository->findBy([], ['sent_at' => 'DESC'], $limit, $offset);

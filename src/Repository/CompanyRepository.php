@@ -40,7 +40,7 @@ class CompanyRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('c')->select('COUNT(c.id)');
 
-        if($q) {
+        if ($q) {
             $qb->andWhere('c.name LIKE :q OR c.address LIKE :q OR c.phone LIKE :q')->setParameter('q', '%' . $q . '%');
         }
 

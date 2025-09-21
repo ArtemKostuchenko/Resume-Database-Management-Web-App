@@ -96,7 +96,7 @@ class CompanyController extends AbstractController
     #[Route('/company/{id<\d+>}/delete', name: 'app_company_delete', methods: ['POST'])]
     public function deleteCompany(Request $request, EntityManagerInterface $entityManager, Company $company): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$company->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $company->getId(), $request->request->get('_token'))) {
             $entityManager->remove($company);
 
             $entityManager->flush();
